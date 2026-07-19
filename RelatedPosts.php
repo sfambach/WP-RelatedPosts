@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       WP-RelatedPosts
  * Description:       Ein nativer Gutenberg-Block für verwandte Beiträge.
- * Version:           1.0.2
+ * Version:           1.1.2
  * Author:            sfambach & AI Assistant
  * License:           GPL-2.0+
  * GitHub Plugin URI: https://github.com
@@ -13,39 +13,27 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Registriert den Block und sorgt dafür, dass die JS-Abhängigkeiten geladen werden.
- */
 function fambach_related_posts_block_init() {
-    // Registriert den Block basierend auf der block.json
+    
+    wp_register_script(
+        'fambach-related-posts-editor-script',
+        plugins_url( 'js/block.js', __FILE__ ),
+        array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data' ),
+        '1.1.2',
+        true
+    );
+
     register_block_type( __DIR__, array(
+        'editor_script'   => 'fambach-related-posts-editor-script',
         'render_callback' => 'fambach_render_related_posts_block',
     ) );
 }
 add_action( 'init', 'fambach_related_posts_block_init' );
 
-/**
- * Zwingt WordPress, die nötigen Editor-Skripte für unseren Vanilla-JS-Block bereitzustellen.
- */
-function fambach_related_posts_enqueue_assets() {
-    $script_asset_path = __DIR__ . '/js/block.js';
-    if ( file_exists( $script_asset_path ) ) {
-        wp_enqueue_script(
-            'fambach-related-posts-editor',
-            plugins_url( 'js/block.js', __FILE__ ),
-            array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components' ),
-            '1.0.2',
-            true
-        );
-    }
-}
-add_action( 'enqueue_block_editor_assets', 'fambach_related_posts_enqueue_assets' );
-
-/**
- * Render-Callback für die Ausgabe im Frontend.
- */
 function fambach_render_related_posts_block( $attributes ) {
-    if ( is_admin() || empty( $attributes['beitraege_aktivieren'] ) ) {
+    $aktiviert = isset( $attributes['beitraege_aktivieren'] ) ? $attributes['beitraege_aktivieren'] : true;
+    
+    if ( is_admin() || ! $aktiviert ) {
         return '';
     }
 
@@ -68,7 +56,7 @@ function fambach_render_related_posts_block( $attributes ) {
 
     $args = array(
         'post_type'      => 'post',
-        'posts_per_page' => $anzahl, 
+        'posts_per_page' => $anzahl,
         'post__not_in'   => array( $current_post_id ),
         'category__in'   => $categories,
         'orderby'        => 'modified',

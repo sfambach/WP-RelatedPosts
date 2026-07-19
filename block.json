@@ -13,14 +13,14 @@
         },
         "anzahl_beitraege": {
             "type": "integer",
-            "default": 5,
-            "enum": [3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+            "default": 5
         },
         "ueberschrift_typ": {
             "type": "string",
-            "default": "h3",
-            "enum": ["h2", "h3", "h4", "h5", "h6", "p", "div"]
+            "default": "h3"
         }
     },
-    "editorScript": "file:./js/block.js"
+    "supports": {
+        "align": true
+    }
 }
