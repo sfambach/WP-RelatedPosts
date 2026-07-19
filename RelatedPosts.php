@@ -3,7 +3,7 @@
  * Plugin Name:       RelatedPosts
  * Plugin URI:        https://fambach.net
  * Description:       A native, modern Gutenberg block for WordPress 7+ that displays related posts based on automatic or manual categories, sorted descending by their last modification date.
- * Version:           1.2.0
+ * Version:           1.0.1
  * Author:            Fambach & AI-Copilot
  * Author URI:        https://fambach.net
  * License:           GPL-2.0+
