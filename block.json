@@ -1,8 +1,21 @@
 {
+    "$schema": "https://wp.org",
     "apiVersion": 3,
-    "name": "WP-RelatedPosts,
-    "title": "Related Posts searched by Category",
-    
-    "editorScript": "file:./js/block.js", 
-    "viewScript": "file:./js/frontend.js"
+    "name": "sfambach/related-posts",
+    "title": "Related Posts",
+    "category": "widgets",
+    "icon": "list-view",
+    "description": "Zeigt verwandte Beiträge basierend auf Kategorien an.",
+    "attributes": {
+        "beitraege_aktivieren": {
+            "type": "boolean",
+            "default": true
+        },
+        "anzahl_beitraege": {
+            "type": "integer",
+            "default": 5,
+            "enum": [3, 5, 10, 15, 20]
+        }
+    },
+    "editorScript": "file:./js/block.js"
 }
