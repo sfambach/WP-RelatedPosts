@@ -1,7 +1,7 @@
 {
     "$schema": "https://wp.org",
     "apiVersion": 3,
-    "name": "sfambach/related-posts",
+    "name": "fambach/related-posts",
     "title": "Related Posts",
     "category": "widgets",
     "icon": "list-view",
@@ -14,8 +14,14 @@
         "anzahl_beitraege": {
             "type": "integer",
             "default": 5,
-            "enum": [3, 5, 10, 15, 20]
+            "enum": [3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+        },
+        "ueberschrift_typ": {
+            "type": "string",
+            "default": "h3",
+            "enum": ["h2", "h3", "h4", "h5", "h6", "p", "div"]
         }
     },
     "editorScript": "file:./js/block.js"
+}
 }

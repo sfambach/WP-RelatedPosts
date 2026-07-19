@@ -27,13 +27,19 @@ add_action( 'init', 'fambach_related_posts_block_init' );
  * Render-Callback für die Ausgabe im Frontend.
  */
 function fambach_render_related_posts_block( $attributes ) {
-    // Prüfen, ob die Funktion im Backend/Editor oder der Schalter auf FALSE steht
+    // Prüfen, ob die Funktion im Backend oder der Schalter auf FALSE steht
     if ( is_admin() || empty( $attributes['beitraege_aktivieren'] ) ) {
         return '';
     }
 
-    // Sicherstellen, dass die Anzahl eine echte Ganzzahl ist
+    // Variablen-Zuweisung und Fallbacks
     $anzahl = isset( $attributes['anzahl_beitraege'] ) ? (int) $attributes['anzahl_beitraege'] : 5;
+    $heading_tag = isset( $attributes['ueberschrift_typ'] ) ? $attributes['ueberschrift_typ'] : 'h3';
+
+    // Erweiterter Sicherheits-Schutz Whitelist
+    if ( ! in_array( $heading_tag, array( 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div' ), true ) ) {
+        $heading_tag = 'h3';
+    }
     
     // Die ID des aktuellen Beitrags ermitteln
     $current_post_id = get_the_ID();
@@ -50,10 +56,10 @@ function fambach_render_related_posts_block( $attributes ) {
     // WP_Query Argumente aufbauen
     $args = array(
         'post_type'      => 'post',
-        'posts_per_page' => $anzahl, // Nutzt die ausgewählte Ganzzahl
-        'post__not_in'   => array( $current_post_id ), // Den aktuellen Beitrag ausschließen
+        'posts_per_page' => $anzahl, // Nutzt die ausgewählte Anzahl
+        'post__not_in'   => array( $current_post_id ),
         'category__in'   => $categories,
-        'orderby'        => 'modified', // Sortierung nach letzter Änderung
+        'orderby'        => 'modified',
         'order'          => 'DESC',
     );
 
@@ -62,7 +68,10 @@ function fambach_render_related_posts_block( $attributes ) {
 
     if ( $related_query->have_posts() ) {
         $output .= '<div class="wp-block-fambach-related-posts">';
-        $output .= '<h3>Das könnte dich auch interessieren:</h3>';
+        
+        // Generiert die dynamische Überschrift
+        $output .= '<' . $heading_tag . ' class="related-posts-title">Das könnte dich auch interessieren:</' . $heading_tag . '>';
+        
         $output .= '<ul>';
         
         while ( $related_query->have_posts() ) {
@@ -73,7 +82,6 @@ function fambach_render_related_posts_block( $attributes ) {
         $output .= '</ul>';
         $output .= '</div>';
         
-        // Post-Data Reset nach Custom Query unbedingt erforderlich
         wp_reset_postdata();
     } else {
         $output .= '<p class="related-posts-empty">Keine ähnlichen Beiträge gefunden.</p>';
@@ -81,4 +89,3 @@ function fambach_render_related_posts_block( $attributes ) {
 
     return $output;
 }
-
